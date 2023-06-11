@@ -3,6 +3,7 @@ package com.renaissance.employee.controller;
 import com.renaissance.employee.exception.ResourceNotFoundException;
 import com.renaissance.employee.model.Admin;
 import com.renaissance.employee.service.AdminService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,10 +34,18 @@ public class HomeController {
 
     @GetMapping("login/{login}/{password}")
     public ResponseEntity<Admin> verifyAdmin(@PathVariable("login") String login, @PathVariable("password") String password) {
-            Admin admin =  service.verifyAdmin(login, password);
-            if(admin == null)
+            Admin adminData =  service.verifyAdmin(login, password);
+            if(adminData == null)
                 throw new ResourceNotFoundException("Incorrect Login or Password");
-            return new ResponseEntity<>(admin, HttpStatus.OK);
+            return new ResponseEntity<>(adminData, HttpStatus.OK);
+    }
+
+    @PostMapping("login/{login}")
+    public ResponseEntity<Admin> verifyAdminByUserName(@PathVariable("login") String login) {
+        Admin adminData =  service.verifyAdminByUserName(login);
+        if(adminData == null)
+            throw new ResourceNotFoundException("Incorrect Username");
+        return new ResponseEntity<>(adminData, HttpStatus.OK);
     }
 
     @GetMapping("login/{id}")
@@ -50,7 +59,7 @@ public class HomeController {
     }
 
     @PostMapping(value = "login")
-    public ResponseEntity<Admin> addAdmin(@RequestBody Admin admin) {
+    public ResponseEntity<Admin> addAdmin(@Valid @RequestBody Admin admin) {
             service.addAdmin(admin);
             return new ResponseEntity<>(admin, HttpStatus.CREATED);
     }

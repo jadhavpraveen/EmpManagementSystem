@@ -1,6 +1,10 @@
 package com.renaissance.employee.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name="admin")
@@ -19,9 +23,15 @@ public class Admin {
         this.password = password;
     }
 
+    @Valid
+    @NotBlank(message="Username is required")
+    @Size(min=3, max=20, message = "The username must be from 3 to 20 characters.")
     @Column(name="login")
     String login;
 
+    @NotBlank(message="Password is required")
+    @Pattern(regexp = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!*()]).{8,}$",
+            message = "Password must be 8 characters long and combination of uppercase letters, lowercase letters, numbers, special characters.")
     @Column(name="Password")
     String password;
 

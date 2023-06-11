@@ -28,6 +28,12 @@ public class AdminService implements IAdminService{
         return admin;
     }
     @Override
+    public Admin verifyAdminByUserName(String login)
+    {
+        Admin admin = repo.verifyAdminByUserName(login);
+        return admin;
+    }
+    @Override
     public Optional<Admin> getAdminById(int id)
     {
        Optional<Admin> admin = repo.findById(id);

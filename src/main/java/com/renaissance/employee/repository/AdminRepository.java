@@ -10,6 +10,9 @@ import org.springframework.stereotype.Repository;
 public interface AdminRepository extends JpaRepository<Admin, Integer> {
 
     @Query("select a from Admin a where a.login = :login and a.password= :password")
-    public Admin verifyAdmin(@Param("login") String login, @Param("password") String password);
+     Admin verifyAdmin(@Param("login") String login, @Param("password") String password);
+
+    @Query("select a from Admin a where a.login = :login")
+     Admin verifyAdminByUserName(@Param("login") String login);
 
 }
