@@ -66,16 +66,9 @@ public class HomeController {
     @PutMapping("login/{id}")
     public ResponseEntity<Admin> updateAdmin(@PathVariable("id") int id, @RequestBody Admin admin)  {
         Admin adminData = service.getAdminById(id).orElseThrow(()->new ResourceNotFoundException("Admin not found with ID : " + id));
-        //if(adminData.isPresent()) {
-            //Admin _admin = adminData.get();
             adminData.setLogin(admin.getLogin());
             adminData.setPassword(admin.getPassword());
             return new ResponseEntity<>(service.addAdmin(adminData), HttpStatus.OK);
-        //}
-        //else {
-          //  throw new ResourceNotFoundException("Admin not found with ID : " + id);
-            //return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        //}
     }
 
     @DeleteMapping("login/{id}")
@@ -84,6 +77,5 @@ public class HomeController {
             Admin adminData = service.getAdminById(id).orElseThrow(()->new ResourceNotFoundException("Admin not found with ID : " + id));
             service.deleteAdminById(adminData.getId());
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            //return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
