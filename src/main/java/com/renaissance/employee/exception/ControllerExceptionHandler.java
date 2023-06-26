@@ -22,6 +22,15 @@ public class ControllerExceptionHandler {
                 request.getDescription(false));
         return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
     }
+    @ExceptionHandler(NullException.class)
+    public ResponseEntity<ErrorMessage> nullPointerExceptionHandler(NullException ex, WebRequest request) {
+        ErrorMessage message = new ErrorMessage(
+                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                new Date(),
+                ex.getMessage(),
+                request.getDescription(false));
+        return new ResponseEntity<>(message, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorMessage> globalExceptionHandler(Exception ex, WebRequest request) {
         ErrorMessage message = new ErrorMessage(

@@ -1,5 +1,6 @@
 package com.renaissance.employee.service;
 
+import com.renaissance.employee.exception.NullException;
 import com.renaissance.employee.exception.ResourceNotFoundException;
 import com.renaissance.employee.model.City;
 import com.renaissance.employee.model.Country;
@@ -13,13 +14,13 @@ import java.util.Optional;
 
 @Service
 public class CountryCityService implements ICountryCityService {
-
     @Autowired
     CountryRepository countryRepo;
     @Autowired
     CityRepository cityRepo;
     @Override
     public Country addCountry(Country country) {
+        if(country == null) throw new NullException("Object to be inserted cannot be null");
         Country countryData = countryRepo.findCountryByName(country.getCountryName());
         if(countryData != null) {
             throw new ResourceNotFoundException("Country with name  " + country.getCountryName() + " already exists");
