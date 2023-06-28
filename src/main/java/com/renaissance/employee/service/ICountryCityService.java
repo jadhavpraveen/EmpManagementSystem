@@ -11,6 +11,7 @@ public interface ICountryCityService {
     public Country addCountry(Country country);
     public List<Country> getAllCountries();
     public Optional<Country> findByCountryId(int countryId);
+    public Country updateCountry(Country country, int countryId);
     public void deleteCountryById(int countryId);
     public List<City> getAllCities();
     public City addCity(City city);

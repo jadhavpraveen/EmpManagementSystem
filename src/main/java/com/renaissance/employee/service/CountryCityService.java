@@ -28,7 +28,15 @@ public class CountryCityService implements ICountryCityService {
         countryRepo.save(country);
         return country;
     }
-
+    @Override
+    public Country updateCountry(Country country, int id)   {
+        Country countryData = findByCountryId(id).orElseThrow(
+                ()->new ResourceNotFoundException("Country not found with ID : " + id));
+        countryData.setCountryName(country.getCountryName());
+        countryData.setCountryCode(country.getCountryCode());
+        countryRepo.save(countryData);
+        return countryData;
+    }
     @Override
     public List<Country> getAllCountries()
     {
@@ -41,7 +49,11 @@ public class CountryCityService implements ICountryCityService {
         return country;
     }
 
+    @Override
     public void deleteCountryById(int countryId)    {
+        Country country = findByCountryId(countryId)
+                .orElseThrow(()->
+                new ResourceNotFoundException("Country not found with ID : " + countryId));
         countryRepo.deleteById(countryId);
     }
     @Override

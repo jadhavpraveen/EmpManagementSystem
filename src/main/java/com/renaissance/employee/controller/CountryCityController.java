@@ -42,15 +42,11 @@ public class CountryCityController {
     }
     @PutMapping("countries/{id}")
     public ResponseEntity<Country> updateCountry(@Valid @RequestBody Country country, @PathVariable("id") int id)  {
-        Country countryData = service.findByCountryId(id).orElseThrow(()->new ResourceNotFoundException("Country not found with ID : " + id));
-        countryData.setCountryName(country.getCountryName());
-        countryData.setCountryCode(country.getCountryCode());
-        return new ResponseEntity<>(service.addCountry(countryData), HttpStatus.OK);
+          return new ResponseEntity<>(service.updateCountry(country, id), HttpStatus.OK);
     }
     @DeleteMapping("countries/{id}")
     public ResponseEntity<HttpStatus> deleteCountryById(@PathVariable("id") int id) {
-        Country country = service.findByCountryId(id).orElseThrow(()->new ResourceNotFoundException("Country not found with ID : " + id));
-        service.deleteCountryById(country.getCountry_Id());
+        service.deleteCountryById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
     @PostMapping(value = "cities")
@@ -74,7 +70,6 @@ public class CountryCityController {
             return new ResponseEntity<>(city.get(), HttpStatus.OK);
         else
             throw new ResourceNotFoundException("City not found for CityId : " + cityId);
-        //return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
     @GetMapping("cities/country/{countryId}")
     public ResponseEntity<List<City>> getCitiesByCountryId(@PathVariable(value = "countryId") int countryId)   {
