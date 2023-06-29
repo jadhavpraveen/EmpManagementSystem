@@ -15,8 +15,9 @@ public interface ICountryCityService {
     public void deleteCountryById(int countryId);
     public List<City> getAllCities();
     public City addCity(City city);
-    public Optional<City> findCityByCityId(int cityId);
+    public Optional<City> findByCityId(int cityId);
     public List<City> findCitiesByCountryId(int countryId);
+    public City updateCity(City city, int cityId);
     public void deleteCityByCityId(int cityId);
     public void deleteCityByCountryId(int countryId);
 }

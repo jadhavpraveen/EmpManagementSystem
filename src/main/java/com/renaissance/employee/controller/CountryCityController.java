@@ -58,18 +58,13 @@ public class CountryCityController {
     @GetMapping("cities")
     public ResponseEntity<List<City>> getCities()   {
         List<City> cities = service.getAllCities();
-        if(cities.isEmpty())
-            throw new ResourceNotFoundException("No Cities are present. Please create new City");
         return new ResponseEntity<>(cities, HttpStatus.OK);
     }
 
     @GetMapping("cities/{cityId}")
     public ResponseEntity<City> getCityById(@PathVariable(value = "cityId") int cityId)   {
-        Optional<City> city = service.findCityByCityId(cityId);
-        if(city.isPresent())
+        Optional<City> city = service.findByCityId(cityId);
             return new ResponseEntity<>(city.get(), HttpStatus.OK);
-        else
-            throw new ResourceNotFoundException("City not found for CityId : " + cityId);
     }
     @GetMapping("cities/country/{countryId}")
     public ResponseEntity<List<City>> getCitiesByCountryId(@PathVariable(value = "countryId") int countryId)   {
@@ -80,14 +75,11 @@ public class CountryCityController {
     }
     @PutMapping("cities/{id}")
     public ResponseEntity<City> updateCity(@Valid @RequestBody City city,@PathVariable("id") int id)  {
-        City cityData = service.findCityByCityId(id).orElseThrow(()->new ResourceNotFoundException("City not found with ID : " + id));
-        cityData.setCityName(city.getCityName());
-        return new ResponseEntity<>(service.addCity(cityData), HttpStatus.OK);
+        return new ResponseEntity<>(service.updateCity(city, id), HttpStatus.OK);
     }
     @DeleteMapping("cities/{id}")
     public ResponseEntity<HttpStatus> deleteCityByCityId(@PathVariable("id") int id) {
-        City city = service.findCityByCityId(id).orElseThrow(()->new ResourceNotFoundException("City not found with ID : " + id));
-        service.deleteCityByCityId(city.getCityId());
+        service.deleteCityByCityId(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
     @DeleteMapping("cities/countries/{id}")

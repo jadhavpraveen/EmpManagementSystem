@@ -3,10 +3,12 @@ package com.renaissance.country;
 
 import com.renaissance.employee.exception.NullException;
 import com.renaissance.employee.exception.ResourceNotFoundException;
+import com.renaissance.employee.model.City;
 import com.renaissance.employee.model.Country;
 import com.renaissance.employee.repository.CountryRepository;
 import com.renaissance.employee.service.CountryCityService;
 import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -23,24 +25,13 @@ public class CountryServiceTest {
     CountryCityService countryCityService;
 
     @Test
-    public void save_country() throws Exception {
-        Country country =  new Country(
-                1,
-                "South Africa",
-                "RSA");
-        when(countryRepository.save(country)).thenReturn(country);
-        Country country1 = countryCityService.addCountry(country);
-        Assert.assertNotNull(country1);
-        Assert.assertEquals(country, country1);
-        Assert.assertEquals(country.getCountry_Id(), country1.getCountry_Id());
-        Assert.assertEquals(country.getCountryName(), country1.getCountryName());
-    }
-    @Test
     public void save_country_should_throw_null() throws Exception {
         NullException exception = Assert.assertThrows(
-                "Object to be inserted cannot be null",
+                "Country object to be inserted cannot be null",
                 NullException.class,
                 ()->countryCityService.addCountry(null));
+        Assertions.assertEquals(
+                "Country object to be inserted cannot be null", exception.getMessage());
     }
     @Test
     public void save_country_should_throw_resource_not_found_exception_if_country_name_exists() throws Exception {
@@ -56,7 +47,7 @@ public class CountryServiceTest {
 
         String expectedException = "Country with name  South Africa already exists";
         String actualException = "Country with name  " + country.getCountryName() + " already exists";
-        Assert.assertEquals(expectedException, actualException);
+        Assertions.assertEquals(expectedException, actualException);
     }
     @Test
     public void country_should_be_saved_in_database() throws Exception {
@@ -66,10 +57,10 @@ public class CountryServiceTest {
                 "RSA");
         when(countryRepository.save(expectedCountry)).thenReturn(expectedCountry);
         Country actualCountry = countryCityService.addCountry(expectedCountry);
-        Assert.assertEquals(expectedCountry, actualCountry);
-        Assert.assertEquals(expectedCountry.getCountry_Id(), actualCountry.getCountry_Id());
-        Assert.assertEquals(expectedCountry.getCountryName(), actualCountry.getCountryName());
-        Assert.assertEquals(expectedCountry.getCountryCode(), actualCountry.getCountryCode());
+        Assertions.assertEquals(expectedCountry, actualCountry);
+        Assertions.assertEquals(expectedCountry.getCountry_Id(), actualCountry.getCountry_Id());
+        Assertions.assertEquals(expectedCountry.getCountryName(), actualCountry.getCountryName());
+        Assertions.assertEquals(expectedCountry.getCountryCode(), actualCountry.getCountryCode());
     }
     @Test
     public void should_return_no_country_if_country_list_is_empty()  throws Exception  {
@@ -78,10 +69,9 @@ public class CountryServiceTest {
         when(countryRepository.findAll()).thenReturn(countries);
         List<Country> countryList = countryCityService.getAllCountries();
 
-        Assert.assertNotNull(countryList);
-        Assert.assertEquals(countryList.isEmpty(),countryList.isEmpty());
-        Assert.assertEquals(countryList.size(), countryList.size());
-
+        Assertions.assertNotNull(countryList);
+        Assertions.assertEquals(countryList.isEmpty(),countryList.isEmpty());
+        Assertions.assertEquals(countryList.size(), countryList.size());
     }
     @Test
     public void should_return_country_list()  throws Exception  {
@@ -103,10 +93,10 @@ public class CountryServiceTest {
         when(countryRepository.findAll()).thenReturn(countries);
         List<Country> countryList = countryCityService.getAllCountries();
 
-        Assert.assertNotNull(countryList);
-        Assert.assertEquals(countries, countryList);
-        Assert.assertEquals(countryList.isEmpty(),countryList.isEmpty());
-        Assert.assertEquals(countryList.size(), countryList.size());
+        Assertions.assertNotNull(countryList);
+        Assertions.assertEquals(countries, countryList);
+        Assertions.assertEquals(countries.isEmpty(),countryList.isEmpty());
+        Assertions.assertEquals(countries.size(), countryList.size());
 
     }
     @Test
@@ -123,10 +113,10 @@ public class CountryServiceTest {
         when(countryRepository.findById(2)).thenReturn(Optional.of(country2));
         Optional<Country> countryById = countryCityService.findByCountryId(country2.getCountry_Id());
 
-        Assert.assertNotNull(countryById);
-        Assert.assertEquals(countryById, (Optional.of(country2)));
-        Assert.assertEquals(country2.getCountryName(), countryById.get().getCountryName());
-        Assert.assertEquals(country2.getCountryCode(), countryById.get().getCountryCode());
+        Assertions.assertNotNull(countryById);
+        Assertions.assertEquals(countryById, (Optional.of(country2)));
+        Assertions.assertEquals(country2.getCountryName(), countryById.get().getCountryName());
+        Assertions.assertEquals(country2.getCountryCode(), countryById.get().getCountryCode());
     }
     @Test
     public void should_return_no_country_if_countryId_is_not_provided() throws Exception {
@@ -134,10 +124,10 @@ public class CountryServiceTest {
         when(countryRepository.findById(0)).thenReturn(Optional.of(country));
         Optional<Country> countryById = countryCityService.findByCountryId(0);
 
-        Assert.assertNotNull(countryById);
-        Assert.assertEquals(countryById, (Optional.of(country)));
-        Assert.assertEquals(country.getCountryName(), countryById.get().getCountryName());
-        Assert.assertEquals(country.getCountryCode(), countryById.get().getCountryCode());
+        Assertions.assertNotNull(countryById);
+        Assertions.assertEquals(countryById, (Optional.of(country)));
+        Assertions.assertEquals(country.getCountryName(), countryById.get().getCountryName());
+        Assertions.assertEquals(country.getCountryCode(), countryById.get().getCountryCode());
     }
     @Test
     public void should_return_no_country_for_update_country() throws Exception {
@@ -146,7 +136,7 @@ public class CountryServiceTest {
                 "Country not found with ID : " + country.getCountry_Id(),
                 ResourceNotFoundException.class,
                 ()->countryCityService.updateCountry(country,0));
-        Assert.assertEquals("Country not found with ID : 0", exception.getMessage());
+        Assertions.assertEquals("Country not found with ID : 0", exception.getMessage());
     }
     @Test
     public void update_country_if_country_object_is_given() throws Exception {
@@ -163,9 +153,9 @@ public class CountryServiceTest {
         country2.setCountryName("India");
         country2.setCountryCode("IND");
         Country updatedCountryData = countryCityService.updateCountry(country2,country2.getCountry_Id());
-        Assert.assertNotNull(updatedCountryData);
-        Assert.assertEquals("India",updatedCountryData.getCountryName());
-        Assert.assertEquals("IND", updatedCountryData.getCountryCode());
+        Assertions.assertNotNull(updatedCountryData);
+        Assertions.assertEquals("India",updatedCountryData.getCountryName());
+        Assertions.assertEquals("IND", updatedCountryData.getCountryCode());
     }
     @Test
     public void should_return_no_country_for_delete_country() throws Exception {
@@ -174,7 +164,7 @@ public class CountryServiceTest {
                 "Country not found with ID : " + country.getCountry_Id(),
                 ResourceNotFoundException.class,
                 ()->countryCityService.deleteCountryById(0));
-        Assert.assertEquals("Country not found with ID : 0", exception.getMessage());
+        Assertions.assertEquals("Country not found with ID : 0", exception.getMessage());
     }
     @Test
     public void delete_country_if_country_object_is_given() throws Exception {

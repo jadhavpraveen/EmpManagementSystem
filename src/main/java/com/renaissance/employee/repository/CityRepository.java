@@ -1,6 +1,7 @@
 package com.renaissance.employee.repository;
 
 import com.renaissance.employee.model.City;
+import com.renaissance.employee.model.Country;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -19,7 +20,9 @@ public interface CityRepository extends JpaRepository<City, Integer> {
 
    @Query("select c from City c where lower(c.cityName) = lower(:cityName)")
    Optional<City> findCityByCityName(@Param("cityName") String cityName);
-   //Optional<City> findByCityName(String cityName);
+
+    @Query("select c from Country c where lower(c.countryName) = lower(:countryName)")
+    Country findCountryByName(@Param("countryName") String countryName);
 
     @Transactional
     @Modifying // to mark update or delete query

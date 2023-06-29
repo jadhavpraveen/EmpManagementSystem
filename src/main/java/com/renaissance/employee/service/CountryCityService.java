@@ -20,7 +20,7 @@ public class CountryCityService implements ICountryCityService {
     CityRepository cityRepo;
     @Override
     public Country addCountry(Country country) {
-        if(country == null) throw new NullException("Object to be inserted cannot be null");
+        if(country == null) throw new NullException("Country object to be inserted cannot be null");
         Country countryData = countryRepo.findCountryByName(country.getCountryName());
         if(countryData != null) {
             throw new ResourceNotFoundException("Country with name  " + country.getCountryName() + " already exists");
@@ -60,28 +60,34 @@ public class CountryCityService implements ICountryCityService {
     public List<City> getAllCities()
     {
         List<City> cities = cityRepo.findAll();
+        if(cities.isEmpty())
+            throw new ResourceNotFoundException("No Cities are present. Please create new City");
         return cities;
     }
     @Override
     public City addCity(City city) {
-        Country country = countryRepo.findCountryByName(city.getCountry().getCountryName());
+        if(city == null) throw new NullException("City object to be inserted cannot be null");
 
+        Country country = cityRepo.findCountryByName(city.getCountry().getCountryName());
         if(country != null) {
             Optional<City> cityData = cityRepo.findCityByCityName(city.getCityName());
             if(cityData.isPresent())
                 throw new ResourceNotFoundException("City with name " + city.getCityName() + " already exists");
+
                 city.setCountry(country);
                 cityRepo.save(city);
+                return city;
         }
         else
             throw new ResourceNotFoundException("Not found Country with name = " + city.getCountry().getCountryName());
-
-        return city;
     }
     @Override
-    public Optional<City> findCityByCityId(int cityId)   {
+    public Optional<City> findByCityId(int cityId)   {
         Optional<City> city = cityRepo.findById(cityId);
-        return city;
+        if(city.isPresent())
+            return city;
+        else
+            throw new ResourceNotFoundException("City not found for CityId : " + cityId);
     }
     @Override
     public List<City> findCitiesByCountryId(int countryId)  {
@@ -91,16 +97,26 @@ public class CountryCityService implements ICountryCityService {
         return cities;
     }
     @Override
+    public City updateCity(City city, int cityId)   {
+        City cityData = cityRepo.findById(cityId)
+                        .orElseThrow(()->
+                        new ResourceNotFoundException("City not found with ID : " + cityId));
+        cityData.setCityName(city.getCityName());
+        cityRepo.save(cityData);
+        return cityData;
+    }
+    @Override
     public void deleteCityByCityId(int cityId)  {
-        cityRepo.deleteById(cityId);
+       City city = findByCityId(cityId)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("City not found with ID : " + cityId));
+
+        cityRepo.deleteById(city.getCityId());
     }
     @Override
     public void deleteCityByCountryId(int countryId)    {
         if(!countryRepo.existsById(countryId))
             throw new ResourceNotFoundException("No City exist with country Id : " + countryId);
         cityRepo.deleteCityByCountryId(countryId);
-    }
-
-    public static class JwtService {
     }
 }
