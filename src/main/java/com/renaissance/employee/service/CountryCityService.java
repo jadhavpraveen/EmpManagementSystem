@@ -109,7 +109,7 @@ public class CountryCityService implements ICountryCityService {
     public void deleteCityByCityId(int cityId)  {
        City city = findByCityId(cityId)
                 .orElseThrow(() ->
-                        new ResourceNotFoundException("City not found with ID : " + cityId));
+                        new ResourceNotFoundException("City not found for CityId : " + cityId));
 
         cityRepo.deleteById(city.getCityId());
     }

@@ -294,10 +294,10 @@ public class CityServiceTest {
     public void delete_city_byId_should_return_resource_not_found_exception() throws Exception  {
         City city = new City();
         ResourceNotFoundException exception = Assert.assertThrows(
-                "City not found with ID : " + city.getCityId(),
+                "City not found for CityId : " + city.getCityId(),
                 ResourceNotFoundException.class,
                 ()->cityService.deleteCityByCityId(0));
-        Assertions.assertEquals("City not found with ID : 0", exception.getMessage());
+        Assertions.assertEquals("City not found for CityId : 0", exception.getMessage());
     }
     @Test
     public void delete_city_if_city_id_is_given() throws Exception {
